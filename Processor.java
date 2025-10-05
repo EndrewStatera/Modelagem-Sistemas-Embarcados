@@ -8,8 +8,6 @@ public class Processor extends Thread
 	private int index;
 	private int imageXStart, imageYStart;
 	private ArrayList<ImageObject> objects;
-	// private boolean endFindingObjects = false;
-	// private boolean endCheckingNeighbors = false;
 
 	public Processor(int index, CentralProcessor cp)
 	{
@@ -48,7 +46,6 @@ public class Processor extends Thread
 				objects.get(i).edgePixels.get(j).y = objects.get(i).edgePixels.get(j).y + imageYStart;
 			}
 		}
-		System.out.println(objects.size());
 		cp.endComputationSignal();
 	}
 

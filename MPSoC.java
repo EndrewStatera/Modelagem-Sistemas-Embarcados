@@ -3,24 +3,18 @@ public class MPSoC
 	int n = 2;
 	int m = 3;
 
-	private Processor pe[][] = new Processor[n][m];
-	private CentralProcessor cp = new CentralProcessor(this, pe);
+	private Processor pe[] = new Processor[n*m];
+	private CentralProcessor cp = new CentralProcessor(this, pe, n, m);
 
 	public MPSoC()
 	{
-		int count = 0;
 		for(int i = 0; i < pe.length; i++)
-			for(int j = 0; j < pe[0].length; j++)
-			{
-				pe[i][j] = new Processor(count, cp);
-				count++;
-			}
+		{
+			pe[i] = new Processor(i, cp);
+		}
 		cp.start();
-		count = 0;
 		for(int i = 0; i < pe.length; i++)
-			for(int j = 0; j < pe[0].length; j++)
-				pe[i][j].start();
-				count++;
+			pe[i].start();
 	}
 	public String toString()
 	{

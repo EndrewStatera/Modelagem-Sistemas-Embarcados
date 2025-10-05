@@ -1,4 +1,3 @@
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -89,7 +88,6 @@ public class ROSMI_Parallel {
         // Visita cada pixel da imagem
         for (int y = 0; y < pictureYEnd; y++) {
             for (int x = 0; x < pictureXEnd; x++) {
-                // System.out.println(x + " " + y);
                 // Recebe valor RGB no ponto (x,y) e avalia por bitmask (Preto = 0 (0x000000), Branco = 16777215 (0xFFFFFF))
                 int color = image.getRGB(x, y) & 0xFFFFFF;
                 // Se o pixel não for branco
