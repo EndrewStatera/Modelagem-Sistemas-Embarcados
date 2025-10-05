@@ -48,17 +48,33 @@ public class Processor extends Thread
 		cp.endComputationSignal();
 	}
 
-	public synchronized void sendObjectCount()
-	{
-		// Envia contagem de objetos da tela para central processor
-		System.out.println("Ending PE" + index);
-		cp.endComputationSignal();
-	}	
-
-	public synchronized void checkNeighbors()
+	public synchronized ArrayList<ImageObject> checkNeighbors(ArrayList<ImageObject> receivedObjects)
 	{
 		System.out.println("PE " + index + " checking neighbors");
+
 		// Compara telas vizinhas
-		sendObjectCount();
+		for (int i = 0; i < objects.size(); i++)
+		{
+			ImageObject object = objects.get(i);
+			for (int j = 0; j < receivedObjects.size(); j++)
+			{
+				ImageObject receivedObject = receivedObjects.get(j);
+				
+				if (rosmi.isConnected(object, receivedObject))
+				{
+					for (int k = 0; k < receivedObject.edgePixels.size(); k++)
+					{
+						object.edgePixels.add(receivedObject.edgePixels.get(k));
+					}
+					receivedObjects.remove(j);
+				}
+			}
+		}
+
+		System.out.println("Ending PE" + index);
+		cp.endComputationSignal();
+		objects.addAll(receivedObjects);
+
+		return objects;
 	}
 }

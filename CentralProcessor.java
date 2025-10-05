@@ -1,11 +1,13 @@
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CentralProcessor extends Thread
 {
 	private MPSoC mpsoc;
 	private Processor pe[][];
 	private int processesStarted;
+	private ArrayList<ImageObject> objects;
 
 	public CentralProcessor(MPSoC mpsoc, Processor pe[][])
 	{
@@ -18,6 +20,7 @@ public class CentralProcessor extends Thread
 		System.out.println("Start CP");
 
 		BufferedImage img = null;
+		objects = new ArrayList<ImageObject>();
 
 		try {
 			img = javax.imageio.ImageIO.read(new java.io.File("image-test.png"));
@@ -36,7 +39,6 @@ public class CentralProcessor extends Thread
 				processesStarted++;
 			}
 		}
-		// System.out.println("Waiting: " + processesStarted);
 
 		// Executa processos
 
@@ -86,23 +88,14 @@ public class CentralProcessor extends Thread
 			{
 				checkNeighbors(i, j);
 				processesStarted++;
+
+				// Espera aqui para esperar cada processo se comunicar com outros e evitar race condition
+				while (processesStarted > 0);
+				
 			}
 		}
 
-		// Espera processos terminarem e mandarem sinal
-		try
-		{
-			while(processesStarted > 0)
-			{
-				Thread.sleep(500);
-				System.out.println(processesStarted);
-			}
-		}	
-		catch(InterruptedException e) 
-		{ 
-			notifyAll(); 
-		}
-
+		System.out.println(objects.size());
 		System.out.println(mpsoc);
 		System.out.println("Ending CP");
 		Thread.yield();
@@ -124,8 +117,6 @@ public class CentralProcessor extends Thread
 		int cropWidth = image.getWidth() / pe[0].length;
 		int cropYBegin = cropHeight * index1;
 		int cropXBegin = cropWidth * index2;
-		// int cropYEnd = cropYBegin + cropHeight - 1;
-		// int cropXEnd = cropXBegin + cropWidth - 1;
 
 		BufferedImage crop = image.getSubimage(cropXBegin, cropYBegin, cropWidth, cropHeight);
 		
@@ -140,8 +131,8 @@ public class CentralProcessor extends Thread
 
 	public synchronized void checkNeighbors(int index1, int index2)
 	{
-		// Chama processadores para verificarem seus vizinhos
-		pe[index1][index2].checkNeighbors();
+		// Chama processadores para verificarem seus vizinhos com a lista de objetos total
+		objects = pe[index1][index2].checkNeighbors(objects);
 	}
 
 	public String toString()

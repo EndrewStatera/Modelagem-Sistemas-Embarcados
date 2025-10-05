@@ -1,3 +1,4 @@
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -101,10 +102,29 @@ public class ROSMI_Parallel {
         return objects;
     }
 
-    public boolean isConnected(int pixelX, int pixelY)
+    public boolean isConnected(ImageObject object1, ImageObject object2)
     {
         // Verifica se está conectado
-        return true;
+        for (int i = 0; i < object1.edgePixels.size(); i++)
+        {
+            Pair object1EdgePixels = object1.edgePixels.get(i);
+            for (int j = 0; j < object2.edgePixels.size(); j++)
+            {
+                Pair object2EdgePixels = object2.edgePixels.get(j);
+
+                for (int[] dir : DIRS)
+                {
+                    if (object1EdgePixels.x + dir[0] == object2EdgePixels.x ||
+                        object1EdgePixels.y + dir[1] == object2EdgePixels.y)
+                    {
+                        System.out.println(object1EdgePixels.x + " " + object2EdgePixels.x);
+                        System.out.println(object1EdgePixels.y + " " + object2EdgePixels.y);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) throws Exception {
