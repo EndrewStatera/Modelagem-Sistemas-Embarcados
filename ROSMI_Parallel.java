@@ -9,10 +9,8 @@ public class ROSMI_Parallel {
 
     BufferedImage image;
     
-    int pictureWidthEnd;
-    int pictureHeightEnd;
-    int pictureXOrigin;
-    int pictureYOrigin;
+    int pictureXEnd;
+    int pictureYEnd;
     int pictureCount;
 
     // 8 direções de possíveis pixels vizinhos
@@ -26,14 +24,12 @@ public class ROSMI_Parallel {
         objects = new ArrayList<ImageObject>();
     }
 
-    public void initialize(BufferedImage _image, int _pictureXOrigin, int _pictureYOrigin, int _pictureWidthEnd, int _pictureHeightEnd)
+    public void initialize(BufferedImage _image, int _pictureWidth, int _pictureHeight)
     {
-        pictureWidthEnd = _pictureWidthEnd;
-        pictureHeightEnd = _pictureHeightEnd;
-        pictureXOrigin = _pictureXOrigin;
-        pictureYOrigin = _pictureYOrigin;
+        pictureXEnd = _pictureWidth - 1;
+        pictureYEnd = _pictureHeight - 1;
         pictureCount = 0;
-        visited = new boolean[pictureHeightEnd - pictureYOrigin + 1][pictureWidthEnd - pictureXOrigin + 1];
+        visited = new boolean[_pictureHeight][_pictureWidth];
         image = _image;
 
         objects = new ArrayList<ImageObject>();
@@ -48,7 +44,7 @@ public class ROSMI_Parallel {
         ImageObject object = new ImageObject();
 
         // Se está em uma borda, adiciona ao objeto para futura comparação
-        if (startX == pictureXOrigin || startX == pictureWidthEnd || startY == pictureYOrigin || startY == pictureHeightEnd)
+        if (startX == 0 || startX == pictureXEnd || startY == 0 || startY == pictureYEnd)
         {
             object.edgePixels.add(new Pair(startX, startY));
         }
@@ -64,7 +60,7 @@ public class ROSMI_Parallel {
                 int ny = y + dir[1];
 
                 // Se está dentro das coordenadas válidas da figura
-                if (nx >= pictureXOrigin && nx <= pictureWidthEnd && ny >= pictureYOrigin && ny <= pictureHeightEnd) {
+                if (nx >= 0 && nx <= pictureXEnd && ny >= 0 && ny <= pictureYEnd) {
                     // Se ainda não foi incluído na lista de visitados
                     if (!visited[ny][nx]) {
                         int color = image.getRGB(nx, ny) & 0xFFFFFF;
@@ -72,7 +68,7 @@ public class ROSMI_Parallel {
                         // E não é branco
                         if (color < 0xFFFFFF) {
                             // Se está em uma borda, adiciona ao objeto para futura comparação
-                            if (nx == pictureXOrigin || nx == pictureWidthEnd || ny == pictureYOrigin || ny == pictureHeightEnd) {
+                            if (nx == 0 || nx == pictureXEnd || ny == 0 || ny == pictureYEnd) {
                                 object.edgePixels.add(new Pair(nx, ny));
                             }
 
@@ -88,10 +84,10 @@ public class ROSMI_Parallel {
     }
 
     // Procura por figuras (objetos) na imagem e retorna um TAD que inclui pixels que se encontram na borda (caso existam)
-    public void findObjects() {
+    public ArrayList<ImageObject> findObjects() {
         // Visita cada pixel da imagem
-        for (int y = pictureYOrigin; y < pictureHeightEnd; y++) {
-            for (int x = pictureXOrigin; x < pictureWidthEnd; x++) {
+        for (int y = 0; y < pictureYEnd; y++) {
+            for (int x = 0; x < pictureXEnd; x++) {
                 // System.out.println(x + " " + y);
                 // Recebe valor RGB no ponto (x,y) e avalia por bitmask (Preto = 0 (0x000000), Branco = 16777215 (0xFFFFFF))
                 int color = image.getRGB(x, y) & 0xFFFFFF;
@@ -102,6 +98,7 @@ public class ROSMI_Parallel {
             }
         }
         visited = null;
+        return objects;
     }
 
     public boolean isConnected(int pixelX, int pixelY)
@@ -111,21 +108,13 @@ public class ROSMI_Parallel {
     }
 
     public static void main(String[] args) throws Exception {
-        BufferedImage img = javax.imageio.ImageIO.read(new java.io.File("dsadsadsa.png"));
+        BufferedImage img = javax.imageio.ImageIO.read(new java.io.File("image-test.png"));
 
         ROSMI_Parallel rosmi = new ROSMI_Parallel();
-        rosmi.initialize(img, 0, 0, 3071, 1535);
+        rosmi.initialize(img, 3072, 1536);
 
         rosmi.findObjects();
 
         System.out.println("Número de figuras detectadas = " + rosmi.objects.size());
-
-        // for (int i = 0; i < rosmi.objects.size(); i++)
-        // {
-        //     for (int j = 0; j < rosmi.objects.get(i).edgePixels.size(); j++)
-        //     {
-        //         System.out.println(rosmi.objects.get(i).edgePixels.get(j).x + " " + rosmi.objects.get(i).edgePixels.get(j).y);
-        //     }
-        // }
     }
 }

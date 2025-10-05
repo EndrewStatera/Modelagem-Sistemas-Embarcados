@@ -13,7 +13,6 @@ public class MPSoC
 			for(int j = 0; j < pe[0].length; j++)
 			{
 				pe[i][j] = new Processor(count, cp);
-				System.out.println(count);
 				count++;
 			}
 		cp.start();
