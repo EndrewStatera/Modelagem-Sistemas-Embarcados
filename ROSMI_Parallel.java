@@ -104,7 +104,7 @@ public class ROSMI_Parallel {
 
     public boolean isConnected(ImageObject object1, ImageObject object2)
     {
-        // Verifica se está conectado
+        // Verifica se duas figuras estão conectadas pelos seus pixels de borda
         for (int i = 0; i < object1.edgePixels.size(); i++)
         {
             Pair object1EdgePixels = object1.edgePixels.get(i);
@@ -114,11 +114,9 @@ public class ROSMI_Parallel {
 
                 for (int[] dir : DIRS)
                 {
-                    if (object1EdgePixels.x + dir[0] == object2EdgePixels.x ||
-                        object1EdgePixels.y + dir[1] == object2EdgePixels.y)
+                    if (object1EdgePixels.x == object2EdgePixels.x + dir[0] &&
+                        object1EdgePixels.y == object2EdgePixels.y + dir[1])
                     {
-                        System.out.println(object1EdgePixels.x + " " + object2EdgePixels.x);
-                        System.out.println(object1EdgePixels.y + " " + object2EdgePixels.y);
                         return true;
                     }
                 }

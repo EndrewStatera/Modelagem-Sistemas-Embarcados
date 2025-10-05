@@ -17,12 +17,14 @@ public class Processor extends Thread
 		this.index = index;
 		rosmi = new ROSMI_Parallel();
 	}
+
 	public void run()
 	{
 		System.out.println("Start PE" + index);
 		Thread.yield();
 	}
 
+	// Inicializa o processador chamando o ROSMI para incluir a imagem
 	public synchronized void initialize(BufferedImage image, int pictureWidth, int pictureHeight, int xStart, int yStart) throws InterruptedException
 	{
 		imageXStart = xStart;
@@ -32,6 +34,7 @@ public class Processor extends Thread
 		cp.endComputationSignal();
 	}
 
+	// Chama o ROSMI para processar a imagem e encontrar objetos
 	public synchronized void findObjects() throws InterruptedException
 	{
 		System.out.println("PE " + index + " finding objects");
@@ -40,6 +43,7 @@ public class Processor extends Thread
 		{
 			for (int j = 0; j < objects.get(i).edgePixels.size(); j++)
 			{
+				// Valores locais transformados para globais
 				objects.get(i).edgePixels.get(j).x = objects.get(i).edgePixels.get(j).x + imageXStart;
 				objects.get(i).edgePixels.get(j).y = objects.get(i).edgePixels.get(j).y + imageYStart;
 			}
@@ -52,7 +56,7 @@ public class Processor extends Thread
 	{
 		System.out.println("PE " + index + " checking neighbors");
 
-		// Compara telas vizinhas
+		// Compara objetos (figuras) globais do CP com sua própria lista
 		for (int i = 0; i < objects.size(); i++)
 		{
 			ImageObject object = objects.get(i);
@@ -60,6 +64,7 @@ public class Processor extends Thread
 			{
 				ImageObject receivedObject = receivedObjects.get(j);
 				
+				// Se os dois objetos estão conectados
 				if (rosmi.isConnected(object, receivedObject))
 				{
 					for (int k = 0; k < receivedObject.edgePixels.size(); k++)

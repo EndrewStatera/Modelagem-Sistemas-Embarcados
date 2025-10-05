@@ -22,11 +22,14 @@ public class CentralProcessor extends Thread
 		BufferedImage img = null;
 		objects = new ArrayList<ImageObject>();
 
+		// Carrega imagem no processador central
 		try {
 			img = javax.imageio.ImageIO.read(new java.io.File("image-test.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		// Inicializa todos processadores
 		for(int i = 0; i < pe.length; i++)
 		{
 			for(int j = 0; j < pe[0].length; j++)
@@ -39,10 +42,7 @@ public class CentralProcessor extends Thread
 				processesStarted++;
 			}
 		}
-
-		// Executa processos
-
-		// Espera processos terminarem e mandarem sinal
+		// Espera processadores terminarem e mandarem sinal
 		try
 		{
 			while(processesStarted > 0) 
@@ -55,6 +55,7 @@ public class CentralProcessor extends Thread
 			notifyAll(); 
 		}
 
+		// Chama processadores para encontrarem figuras em sua parte da imagem
 		for(int i = 0; i < pe.length; i++)
 		{
 			for(int j = 0; j < pe[0].length; j++)
@@ -82,6 +83,7 @@ public class CentralProcessor extends Thread
 			notifyAll(); 
 		}
 
+		// Pede para processadores verificarem por figuras vizinhas (conectadas)
 		for(int i = 0; i < pe.length; i++)
 		{
 			for(int j = 0; j < pe[0].length; j++)
@@ -110,9 +112,8 @@ public class CentralProcessor extends Thread
 
 	public synchronized void initializeProcessor(int index1, int index2, BufferedImage image) throws InterruptedException
 	{
-		// Dividir corretamente entre processadores, talvez usando BufferedImage crop = image.getSubimage(XStart,YStart, XEnd, YEnd)
-		// Caso use esse crop, verificar que os pixels locais (de cada processador) sejam transformados em globais (imagem inteira)
-
+		// Faz crop da imagem e envia para cada processador
+		// Depois receberá o valor local e transformará para global
 		int cropHeight = image.getHeight() / pe.length;
 		int cropWidth = image.getWidth() / pe[0].length;
 		int cropYBegin = cropHeight * index1;
