@@ -1,0 +1,35 @@
+#_NoC_Size (lines columns)
+ 3 3 1
+
+#_CWG_Graphic (list of: core x y)
+ CP 368 231
+ PE_0 150 60
+ PE_1 240 60
+ PE_2 330 60
+ PE_3 420 60
+ PE_4 510 60
+ PE_5 600 60
+
+#_CWG_Vertices (list of: vertices)
+ CP
+ PE_0
+ PE_1
+ PE_2
+ PE_3
+ PE_4
+ PE_5
+
+#_CWG_Edges (list of: sourceVertex - targetVertex numberOfPhitsTransmited)
+ CP - PE_0 75498048
+ CP - PE_1 75499264
+ CP - PE_2 75500416
+ CP - PE_3 75500992
+ CP - PE_4 75501568
+ CP - PE_5 75502080
+ PE_0 - CP 576
+ PE_1 - CP 1792
+ PE_2 - CP 2944
+ PE_3 - CP 3520
+ PE_4 - CP 4096
+ PE_5 - CP 4608
+

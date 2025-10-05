@@ -1,0 +1,30 @@
+#_NoC_Size (lines columns)
+ 3 3 1
+
+#_ACPG_TagsGraphic (list of: Tag x y)
+ START 75 513
+ 0 54 346
+ 1 91 154
+ 148 403 46
+ 149 679 39
+ END 827 37
+
+#_ACPG_VerticesGraphic (list of: vertices --> Tag sourceCore - targetCore phits (x y)
+ 0	CP - PE_0	75497472	: 127	453
+ 0	CP - PE_1	75497472	: 140	379
+ 1	CP - PE_2	75497472	: 175	299
+ 1	CP - PE_3	75497472	: 250	306
+ 1	CP - PE_4	75497472	: 263	249
+ 1	CP - PE_5	75497472	: 226	162
+ 148	PE_0 - CP	576	: 347	195
+ 148	CP - PE_0	576	: 309	138
+ 148	PE_1 - CP	1792	: 504	108
+ 148	CP - PE_1	1792	: 511	174
+ 148	PE_2 - CP	2944	: 469	227
+ 148	CP - PE_2	2944	: 401	232
+ 149	PE_3 - CP	3520	: 736	184
+ 149	CP - PE_3	3520	: 663	165
+ 149	PE_4 - CP	4096	: 795	157
+ 149	CP - PE_4	4096	: 834	110
+ 149	PE_5 - CP	4608	: 586	152
+
